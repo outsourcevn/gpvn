@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="02741d05d4b697fba5e279e9881aaa1da0ca7c7f">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-compat-25.1.1_ba62aec595788ecfcd90e69aec444cf7a5d20041.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-25.1.1_683b341feef115ce5fa6451cf84b76e8141a4e18.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7bde4c34162092e0a77e7f12dc85ed77c484cf5c">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-25.1.1_06c542e13a901c36d68405cf0ba6659807ab326e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ecb496cc08dd52551fc5ec6db3bc0632e95a89bb">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-25.1.1_41ca111efa69fc39772901f076ff1393e6d48e74.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c03bf57f358aa10d253f21989e93bcf6014b3b17">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-25.1.1_e9d08d7254c1118556accd666d5bf8e8c83aeb47.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.github.johnkil.print\print\1.2.2\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3423c4e8a6526948045ac0290c0b5ab753ff5ee6">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.github.johnkil.print-print-1.2.2_f024dc8af69b8266d76bbbd9fb5349f297206c14.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3e04ac8ca644ea7baddf6fdcf72e15c79e9df94a">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-25.1.1_b3289b37cb3408b3b3c128120d63a612f6ce0bfb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\android_sdk\extras\android\m2repository\com\android\support\support-annotations\25.1.1\support-annotations-25.1.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b59b6ee8d6ecc03e672d253800430343493a6ed8">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\support-annotations-25.1.1_635c6d202f380491931fed185a67954bde7be700.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0fb891e8f0cfba0513043a7bb357513d229ca2cd">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-utils-25.1.1_d0f78da1784db470c189843767c15fde0c49cb96.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0d191c1a09e4892d059e5ce749e4ad4e08129e35">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-25.1.1_45699874918025efda151a7eb8b0afbee95be983.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="D:\petproject\AHieu\CayGiaPha\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-25.1.1_efe197d49701c9e8df0be399a127a5509340b8b8.jar" />
+    </item>
+
+</items>
