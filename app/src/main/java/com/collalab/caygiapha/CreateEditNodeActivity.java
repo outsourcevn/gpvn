@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.collalab.caygiapha.holder.ManTreeItemHolder;
+import com.collalab.caygiapha.realmdata.DataNode;
 import com.collalab.caygiapha.treeview.model.TreeNode;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ImagePickerActivity;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class CreateEditNodeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,11 +41,15 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
     private CameraModule cameraModule;
     Intent intent;
     String actionType = "add_node";
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_edit_node);
+
+        realm = Realm.getDefaultInstance();
+
         mCircleAvatar = (CircleImageView) findViewById(R.id.img_node_avatar);
         mCircleAvatar.setOnClickListener(this);
 
@@ -58,7 +65,11 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
         findViewById(R.id.save_create_node).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveNodePerson();
+                if("add_node".equalsIgnoreCase(actionType)) {
+                    saveNodePerson();
+                } else {
+                    doUpdateNodePerson();
+                }
             }
         });
 
@@ -77,13 +88,13 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void saveNodePerson() {
+    private void doUpdateNodePerson() {
         if (TextUtils.isEmpty(mEdtName.getEditableText().toString().trim())) {
             mEdtName.setError("Vui lòng nhập tên");
             return;
         }
-        String uriImage;
-        TreeNode treeNode;
+        final String uriImage;
+        final TreeNode treeNode;
         if (images != null && images.size() > 0) {
             uriImage = images.get(0).getPath();
         } else {
@@ -93,11 +104,76 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
                 uriImage = "";
             }
         }
-        treeNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(uriImage, mEdtName.getEditableText().toString().trim(), mEdtPhone.getEditableText().toString(), mEdtNote.getEditableText().toString()));
 
-        GiaPhaApp.currentNode.getViewHolder().getTreeView().addNode(GiaPhaApp.currentNode, treeNode);
+        final ManTreeItemHolder.ManTreeItem data = (ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue();
+
+        final DataNode dataNode = realm.where(DataNode.class).equalTo("id",data.id).findFirst();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                dataNode.setImgPath(uriImage);
+                dataNode.setName(mEdtName.getEditableText().toString().trim());
+                dataNode.setPhone(mEdtPhone.getEditableText().toString().trim());
+                dataNode.setNote(mEdtNote.getEditableText().toString().trim());
+            }
+        });
+
         finish();
 
+    }
+
+    private void saveNodePerson() {
+        if (TextUtils.isEmpty(mEdtName.getEditableText().toString().trim())) {
+            mEdtName.setError("Vui lòng nhập tên");
+            return;
+        }
+        String uriImage;
+        final TreeNode treeNode;
+        if (images != null && images.size() > 0) {
+            uriImage = images.get(0).getPath();
+        } else {
+            if ("edit_node".equalsIgnoreCase(actionType)) {
+                uriImage = ((ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue()).imgPath;
+            } else {
+                uriImage = "";
+            }
+        }
+
+        final int id = getNextKey();
+
+        treeNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(uriImage, mEdtName.getEditableText().toString().trim(), mEdtPhone.getEditableText().toString(), mEdtNote.getEditableText().toString(),id));
+        GiaPhaApp.currentNode.getViewHolder().getTreeView().addNode(GiaPhaApp.currentNode, treeNode);
+
+        final ManTreeItemHolder.ManTreeItem data = (ManTreeItemHolder.ManTreeItem) treeNode.getValue();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                DataNode node = realm.createObject(DataNode.class);
+                node.setId(id);
+                if(GiaPhaApp.currentNode.getValue() == null) {
+                    node.setParent_id(-1);
+                } else {
+                    node.setParent_id(((ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue()).id);
+                }
+                node.setImgPath(data.imgPath);
+                node.setLevel(treeNode.getLevel());
+                node.setName(data.name);
+                node.setPhone(data.phone);
+                node.setNote(data.note);
+            }
+        });
+
+        finish();
+
+    }
+
+    public int getNextKey() {
+        try {
+            return realm.where(DataNode.class).max("id").intValue() + 1;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
 

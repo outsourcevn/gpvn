@@ -17,6 +17,7 @@ import com.collalab.caygiapha.GiaPhaApp;
 import com.collalab.caygiapha.OnControlAction;
 import com.collalab.caygiapha.R;
 import com.collalab.caygiapha.common.CommonDialog;
+import com.collalab.caygiapha.realmdata.DataNode;
 import com.collalab.caygiapha.treeview.model.TreeNode;
 import com.github.johnkil.print.PrintView;
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static java.security.AccessController.getContext;
 
@@ -34,6 +37,7 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
     private CircleImageView imgAvatar;
     private PrintView arrowView;
     private Context mContext;
+    private Realm realm;
 
     public OnControlAction getmOnControlAction() {
         return mOnControlAction;
@@ -48,6 +52,7 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
     public ManTreeItemHolder(Context context) {
         super(context);
         mContext = context;
+        realm = Realm.getDefaultInstance();
     }
 
     public void updateNodeView(final TreeNode node, ManTreeItem value) {
@@ -109,12 +114,14 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
         public String name;
         public String phone;
         public String note;
+        public int id;
 
-        public ManTreeItem(String imgPath, String name, String phone, String note) {
+        public ManTreeItem(String imgPath, String name, String phone, String note, int id) {
             this.imgPath = imgPath;
             this.name = name;
             this.phone = phone;
             this.note = note;
+            this.id = id;
         }
     }
 
@@ -146,6 +153,15 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
                 .setCancelable(false)
                 .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
+                        final DataNode results = realm.where(DataNode.class).equalTo("id", treeNode.getNodeManValue().id).findFirst();
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                results.deleteFromRealm();
+                            }
+                        });
+
                         getTreeView().removeNode(treeNode);
                         dialog.cancel();
                     }

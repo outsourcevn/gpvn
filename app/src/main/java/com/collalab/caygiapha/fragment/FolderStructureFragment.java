@@ -17,13 +17,19 @@ import com.collalab.caygiapha.GiaPhaApp;
 import com.collalab.caygiapha.OnControlAction;
 import com.collalab.caygiapha.R;
 import com.collalab.caygiapha.holder.ManTreeItemHolder;
+import com.collalab.caygiapha.realmdata.DataNode;
 import com.collalab.caygiapha.treeview.model.TreeNode;
 import com.collalab.caygiapha.treeview.view.AndroidTreeView;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class FolderStructureFragment extends android.support.v4.app.Fragment implements View.OnClickListener {
-    private AndroidTreeView tView;
+    private AndroidTreeView mTreeView;
     private View btnAddNode;
     TreeNode rootNode;
+    private Realm realm;
+    RealmResults<DataNode> nodeLevel1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,37 +37,65 @@ public class FolderStructureFragment extends android.support.v4.app.Fragment imp
         setHasOptionsMenu(true);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_default, null, false);
         ViewGroup containerView = (ViewGroup) rootView.findViewById(R.id.container);
 
+        realm = Realm.getDefaultInstance();
+
         btnAddNode = rootView.findViewById(R.id.btn_add_node);
         btnAddNode.setOnClickListener(this);
 
         rootNode = TreeNode.root();
-        TreeNode computerRoot = new TreeNode(new ManTreeItemHolder.ManTreeItem(null, "Thien Ha Vo Song", "0939884686", "Chu lam o Hanoi"));
-        rootNode.addChildren(computerRoot);
-        rootNode.addChild(new TreeNode(new ManTreeItemHolder.ManTreeItem(null, "Long Phi Bat Bai", "0939884686", "Chu lam o Hanoi")));
 
-        tView = new AndroidTreeView(getActivity(), rootNode);
-        tView.setDefaultAnimation(true);
-        tView.setDefaultContainerStyle(R.style.TreeNodeStyleCustom);
-        tView.setDefaultViewHolder(ManTreeItemHolder.class);
-        tView.setDefaultNodeClickListener(nodeClickListener);
-        tView.setDefaultNodeLongClickListener(nodeLongClickListener);
+        getNodeLevel1();
 
-        containerView.addView(tView.getView());
+        mTreeView = new AndroidTreeView(getActivity(), rootNode);
+        mTreeView.setDefaultAnimation(true);
+        mTreeView.setDefaultContainerStyle(R.style.TreeNodeStyleCustom);
+        mTreeView.setDefaultViewHolder(ManTreeItemHolder.class);
+        mTreeView.setDefaultNodeClickListener(nodeClickListener);
+        mTreeView.setDefaultNodeLongClickListener(nodeLongClickListener);
+
+        containerView.addView(mTreeView.getView());
 
         if (savedInstanceState != null) {
             String state = savedInstanceState.getString("tState");
             if (!TextUtils.isEmpty(state)) {
-                tView.restoreState(state);
+                mTreeView.restoreState(state);
             }
         }
 
         return rootView;
+    }
+
+    private void getNodeLevel1() {
+        nodeLevel1 = realm.where(DataNode.class).equalTo("level", 1).findAll();
+
+        for (int i = 0; i < nodeLevel1.size(); i++) {
+            TreeNode childNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(nodeLevel1.get(i).imgPath, nodeLevel1.get(i).name, nodeLevel1.get(i).phone, nodeLevel1.get(i).note, nodeLevel1.get(i).id));
+            rootNode.addChild(childNode);
+            loadChildrenNode(childNode);
+        }
+    }
+
+    private void loadChildrenNode(TreeNode treeNode) {
+        ManTreeItemHolder.ManTreeItem data = (ManTreeItemHolder.ManTreeItem) treeNode.getValue();
+        RealmResults<DataNode> childList = realm.where(DataNode.class).equalTo("parent_id", data.id).findAll();
+        int numChild = childList.size();
+        for (int i = 0; i < numChild; i++) {
+            TreeNode childNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(childList.get(i).imgPath, childList.get(i).name, childList.get(i).phone, childList.get(i).note, childList.get(i).id));
+            treeNode.addChild(childNode);
+            loadChildrenNode(childNode);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -74,11 +108,11 @@ public class FolderStructureFragment extends android.support.v4.app.Fragment imp
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.expandAll:
-                tView.expandAll();
+                mTreeView.expandAll();
                 break;
 
             case R.id.collapseAll:
-                tView.collapseAll();
+                mTreeView.collapseAll();
                 break;
         }
         return true;
@@ -104,7 +138,7 @@ public class FolderStructureFragment extends android.support.v4.app.Fragment imp
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("tState", tView.getSaveState());
+        outState.putString("tState", mTreeView.getSaveState());
     }
 
     @Override
@@ -137,5 +171,4 @@ public class FolderStructureFragment extends android.support.v4.app.Fragment imp
 
         }
     };
-
 }

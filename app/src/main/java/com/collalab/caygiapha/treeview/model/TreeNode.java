@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 
 import com.collalab.caygiapha.R;
+import com.collalab.caygiapha.holder.ManTreeItemHolder;
 import com.collalab.caygiapha.treeview.view.AndroidTreeView;
 import com.collalab.caygiapha.treeview.view.TreeNodeWrapperView;
 
@@ -97,6 +98,10 @@ public class TreeNode {
 
     public Object getValue() {
         return mValue;
+    }
+
+    public ManTreeItemHolder.ManTreeItem getNodeManValue() {
+        return (ManTreeItemHolder.ManTreeItem) mValue;
     }
 
     public void setValue(Object object) {
