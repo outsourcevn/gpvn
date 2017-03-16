@@ -10,20 +10,24 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.collalab.caygiapha.R;
+import com.collalab.caygiapha.realmdata.DataNode;
 
 /**
  * Created by VietMac on 2017-03-10.
  */
 
 public class CreateNodeDialog extends DialogFragment {
+
+    DataNode mDataNode;
+
     public CreateNodeDialog() {
 
     }
 
-    public static CreateNodeDialog newInstance(String title) {
+    public static CreateNodeDialog newInstance(DataNode dataNode) {
         CreateNodeDialog frag = new CreateNodeDialog();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        args.putSerializable("data_node", dataNode);
         frag.setArguments(args);
         return frag;
     }
@@ -32,6 +36,16 @@ public class CreateNodeDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_create_edit_node, container);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(getArguments() != null) {
+            mDataNode = getArguments().getParcelable("data_node");
+        }
+
     }
 
     @Override

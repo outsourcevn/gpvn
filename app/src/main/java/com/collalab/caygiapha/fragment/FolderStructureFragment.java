@@ -152,23 +152,4 @@ public class FolderStructureFragment extends android.support.v4.app.Fragment imp
         }
     }
 
-    OnControlAction mOnControlAction = new OnControlAction() {
-        @Override
-        public void onEditNode(TreeNode node, AndroidTreeView treeView) {
-            FragmentManager fm = getChildFragmentManager();
-            CreateNodeDialog editNameDialogFragment = CreateNodeDialog.newInstance("Some Title");
-            editNameDialogFragment.show(fm, "fragment_edit_name");
-
-        }
-
-        @Override
-        public void onAddNode(TreeNode node, AndroidTreeView treeView) {
-
-        }
-
-        @Override
-        public void onDeleteNode(TreeNode node, AndroidTreeView treeView) {
-
-        }
-    };
 }

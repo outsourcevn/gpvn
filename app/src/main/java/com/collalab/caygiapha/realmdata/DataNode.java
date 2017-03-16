@@ -1,12 +1,14 @@
 package com.collalab.caygiapha.realmdata;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 
 /**
  * Created by VietMac on 2017-03-13.
  */
 
-public class DataNode extends RealmObject {
+public class DataNode extends RealmObject implements Serializable {
     public int id;
     public String imgPath;
     public String name;
