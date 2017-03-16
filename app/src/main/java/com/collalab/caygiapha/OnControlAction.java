@@ -10,7 +10,7 @@ import com.collalab.caygiapha.treeview.view.AndroidTreeView;
 public interface OnControlAction {
     void onEditNode(TreeNode node, AndroidTreeView treeView);
 
-    void onAddNode(TreeNode node, AndroidTreeView treeView);
+    void onAvatarClick(TreeNode node, AndroidTreeView treeView);
 
     void onDeleteNode(TreeNode node, AndroidTreeView treeView);
 }

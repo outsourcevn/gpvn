@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.collalab.caygiapha.event.NodeChangeEvent;
 import com.collalab.caygiapha.holder.ManTreeItemHolder;
 import com.collalab.caygiapha.realmdata.DataNode;
 import com.collalab.caygiapha.treeview.model.TreeNode;
@@ -20,6 +23,8 @@ import com.esafirm.imagepicker.features.camera.ImmediateCameraModule;
 import com.esafirm.imagepicker.features.camera.OnImageReadyListener;
 import com.esafirm.imagepicker.model.Image;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
     Uri mCropImageUri;
     CircleImageView mCircleAvatar;
     EditText mEdtName, mEdtPhone, mEdtNote;
+    TextView mTvTitle;
     private static final int RC_CODE_PICKER = 2000;
     private static final int RC_CAMERA = 3000;
 
@@ -65,13 +71,15 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
         findViewById(R.id.save_create_node).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if("add_node".equalsIgnoreCase(actionType)) {
+                if ("add_node".equalsIgnoreCase(actionType)) {
                     saveNodePerson();
                 } else {
                     doUpdateNodePerson();
                 }
             }
         });
+
+        mTvTitle = (TextView) findViewById(R.id.tv_title);
 
         updateNode2View();
     }
@@ -85,6 +93,7 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
                 Uri uri = Uri.fromFile(new File(((ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue()).imgPath));
                 Picasso.with(CreateEditNodeActivity.this).load(uri).placeholder(R.drawable.icon_user_avatar).into(mCircleAvatar);
             }
+            mTvTitle.setText("Sửa thông tin");
         }
     }
 
@@ -106,8 +115,12 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
         }
 
         final ManTreeItemHolder.ManTreeItem data = (ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue();
+        data.name = mEdtName.getEditableText().toString().trim();
+        data.phone = mEdtPhone.getEditableText().toString().trim();
+        data.note = mEdtNote.getEditableText().toString().trim();
+        data.imgPath = uriImage;
 
-        final DataNode dataNode = realm.where(DataNode.class).equalTo("id",data.id).findFirst();
+        final DataNode dataNode = realm.where(DataNode.class).equalTo("id", data.id).findFirst();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -118,7 +131,14 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
             }
         });
 
-        finish();
+        GiaPhaApp.currentNode.getViewHolder().reBindData(GiaPhaApp.currentNode,data);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 300);
 
     }
 
@@ -141,7 +161,7 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
 
         final int id = getNextKey();
 
-        treeNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(uriImage, mEdtName.getEditableText().toString().trim(), mEdtPhone.getEditableText().toString(), mEdtNote.getEditableText().toString(),id));
+        treeNode = new TreeNode(new ManTreeItemHolder.ManTreeItem(uriImage, mEdtName.getEditableText().toString().trim(), mEdtPhone.getEditableText().toString(), mEdtNote.getEditableText().toString(), id));
         GiaPhaApp.currentNode.getViewHolder().getTreeView().addNode(GiaPhaApp.currentNode, treeNode);
 
         final ManTreeItemHolder.ManTreeItem data = (ManTreeItemHolder.ManTreeItem) treeNode.getValue();
@@ -151,7 +171,7 @@ public class CreateEditNodeActivity extends AppCompatActivity implements View.On
             public void execute(Realm realm) {
                 DataNode node = realm.createObject(DataNode.class);
                 node.setId(id);
-                if(GiaPhaApp.currentNode.getValue() == null) {
+                if (GiaPhaApp.currentNode.getValue() == null) {
                     node.setParent_id(-1);
                 } else {
                     node.setParent_id(((ManTreeItemHolder.ManTreeItem) GiaPhaApp.currentNode.getValue()).id);

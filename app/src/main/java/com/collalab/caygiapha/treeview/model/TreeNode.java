@@ -265,6 +265,10 @@ public class TreeNode {
             return createNodeView(mNode, (E) mNode.getValue());
         }
 
+        public void reBindData(final TreeNode node, ManTreeItemHolder.ManTreeItem value) {
+
+        }
+
         public ViewGroup getNodeItemsView() {
             return (ViewGroup) getView().findViewById(R.id.node_items);
         }

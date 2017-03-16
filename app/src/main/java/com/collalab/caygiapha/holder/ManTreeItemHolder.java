@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +14,19 @@ import com.collalab.caygiapha.CreateEditNodeActivity;
 import com.collalab.caygiapha.GiaPhaApp;
 import com.collalab.caygiapha.OnControlAction;
 import com.collalab.caygiapha.R;
-import com.collalab.caygiapha.common.CommonDialog;
+import com.collalab.caygiapha.event.AvatarEvent;
 import com.collalab.caygiapha.realmdata.DataNode;
 import com.collalab.caygiapha.treeview.model.TreeNode;
 import com.github.johnkil.print.PrintView;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import static java.security.AccessController.getContext;
 
 
 public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHolder.ManTreeItem> {
@@ -64,6 +62,15 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
     }
 
     @Override
+    public void reBindData(final TreeNode node, ManTreeItem value) {
+        tvName.setText(value.name);
+        if (!TextUtils.isEmpty(value.imgPath)) {
+            Uri uri = Uri.fromFile(new File(value.imgPath));
+            Picasso.with(mContext).load(uri).placeholder(R.drawable.icon_user_avatar).into(imgAvatar);
+        }
+    }
+
+    @Override
     public View createNodeView(final TreeNode node, ManTreeItem value) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.layout_tree_man_item, null, false);
@@ -76,6 +83,17 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
             Uri uri = Uri.fromFile(new File(value.imgPath));
             Picasso.with(mContext).load(uri).placeholder(R.drawable.icon_user_avatar).into(imgAvatar);
         }
+
+        imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AvatarEvent avatarEvent = new AvatarEvent();
+                avatarEvent.treeNode = node;
+                avatarEvent.androidTreeView = getTreeView();
+                EventBus.getDefault().post(avatarEvent);
+
+            }
+        });
 
         view.findViewById(R.id.btn_add_node).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,13 +172,7 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
                 .setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        final DataNode results = realm.where(DataNode.class).equalTo("id", treeNode.getNodeManValue().id).findFirst();
-                        realm.executeTransaction(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                results.deleteFromRealm();
-                            }
-                        });
+                        deleteNode(treeNode.getNodeManValue().id);
 
                         getTreeView().removeNode(treeNode);
                         dialog.cancel();
@@ -174,5 +186,24 @@ public class ManTreeItemHolder extends TreeNode.BaseNodeViewHolder<ManTreeItemHo
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    private void deleteNode(int id) {
+        final DataNode results = realm.where(DataNode.class).equalTo("id", id).findFirst();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results.deleteFromRealm();
+            }
+        });
+
+        RealmResults<DataNode> listChildren = realm.where(DataNode.class).equalTo("parent_id", id).findAll();
+        int numChild = listChildren.size();
+
+        for (int i = 0; i < numChild; i++) {
+            deleteNode(listChildren.get(i).id);
+        }
+
+    }
+
 
 }

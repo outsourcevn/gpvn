@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CayGiaPha</string>
+    <string name="app_name">Cây Gia Phả</string>
     <string name="ic_access_alarms">&#xe000;</string>
     <string name="ic_access_time">&#xe001;</string>
     <string name="ic_accessibility">&#xe002;</string>
@@ -434,4 +434,5 @@
     <string name="ic_wifi_tethering">&#xe1af;</string>
     <string name="ic_work">&#xe1b0;</string>
     <string name="ic_edit">&#xf11f;</string>
+    <string name="banner_home_footer">ca-app-pub-6575239088642506/5951456073</string>
 </resources>

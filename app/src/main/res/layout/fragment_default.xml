@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,27 +11,28 @@
         android:background="@color/colorPrimary">
 
         <EditText
+            android:id="@+id/edt_search_key"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/btn_search_toolbar"
             android:background="@android:color/transparent"
             android:hint="Tìm kiếm theo tên"
-            android:singleLine="true"
             android:maxLines="1"
-            android:textColor="@android:color/white"
-            android:layout_toLeftOf="@+id/btn_search_toolbar"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:singleLine="true"
+            android:textColor="@android:color/white" />
 
         <ImageView
             android:id="@+id/btn_search_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_search"
+            android:layout_alignParentRight="true"
             android:adjustViewBounds="true"
             android:padding="12dp"
-            android:layout_alignParentRight="true"/>
+            android:src="@drawable/ic_search" />
 
     </RelativeLayout>
 
@@ -38,20 +40,30 @@
         android:id="@+id/btn_add_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:textSize="20dp"
-        android:textColor="@color/colorPrimary"
         android:layout_below="@+id/layout_toolbar"
         android:layout_centerHorizontal="true"
-        android:text="&#xf234;"/>
+        android:padding="12dp"
+        android:text="&#xf234;"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20dp" />
 
     <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btn_add_node"
-        android:id="@+id/container">
+        android:layout_above="@+id/adView"
+        android:layout_below="@+id/btn_add_node">
 
     </RelativeLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_home_footer"></com.google.android.gms.ads.AdView>
 
 
 </RelativeLayout>
